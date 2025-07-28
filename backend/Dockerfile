@@ -1,27 +1,14 @@
-# ---- Build Stage ----
-FROM eclipse-temurin:17-jdk-jammy AS build
+# Use OpenJDK 17 (or 21 if your project uses that version)
+FROM openjdk:17-jdk-slim
 
 # Set working directory
 WORKDIR /app
 
-# Copy Maven files and download dependencies first (for caching)
-COPY mvnw pom.xml ./
-COPY .mvn .mvn
-RUN ./mvnw dependency:go-offline
+# Copy the JAR file from target folder into container
+COPY target/onlinenews-0.0.1-SNAPSHOT.jar app.jar
 
-# Copy source code and build the jar
-COPY src src
-RUN ./mvnw clean package -DskipTests
-
-# ---- Run Stage ----
-FROM eclipse-temurin:17-jdk-jammy
-WORKDIR /app
-
-# Copy built jar from previous stage
-COPY --from=build /app/target/*.jar app.jar
-
-# Expose Spring Boot default port
+# Expose port (Spring Boot default is 8080)
 EXPOSE 8080
 
-# Run the app
+# Run the JAR
 ENTRYPOINT ["java", "-jar", "app.jar"]
