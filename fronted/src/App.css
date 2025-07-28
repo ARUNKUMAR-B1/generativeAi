@@ -1,0 +1,12 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #eef1f5;
+}
+.response-time {
+  margin-top: 8px;
+  text-align: right;
+  font-size: 0.9rem;
+  color: #888;
+  padding-right: 10px;
+}
